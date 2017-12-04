@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Places Searchbox</title>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+    <style>
+		/* Always set the map height explicitly to define the size of the div
+		* element that contains the map. */
+		#map {
+			height: 400px;
+		}
+		/* Optional: Makes the sample page fill the window. */
+		html, body {
+			margin: 0;
+			padding: 0;
+			padding-bottom: 30px;
+			color:white;
+		}
+		body{
+			font-family:"arial",heletica,sans-serif;
+			font-size:12px;
+		    background: #2980b9 url('https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png') repeat 0 0;
+			-webkit-animation: 10s linear 0s normal none infinite animate;
+			-moz-animation: 10s linear 0s normal none infinite animate;
+			-ms-animation: 10s linear 0s normal none infinite animate;
+			-o-animation: 10s linear 0s normal none infinite animate;
+			animation: 10s linear 0s normal none infinite animate;
+ 
+		}
+ 
+		@-webkit-keyframes animate {
+			from {background-position:0 0;}
+			to {background-position: 500px 0;}
+		}
+		 
+		@-moz-keyframes animate {
+			from {background-position:0 0;}
+			to {background-position: 500px 0;}
+		}
+		 
+		@-ms-keyframes animate {
+			from {background-position:0 0;}
+			to {background-position: 500px 0;}
+		}
+		 
+		@-o-keyframes animate {
+			from {background-position:0 0;}
+			to {background-position: 500px 0;}
+		}
+		 
+		@keyframes animate {
+			from {background-position:0 0;}
+			to {background-position: 500px 0;}
+		}
+		#description {
+			font-family: Roboto;
+			font-size: 15px;
+			font-weight: 300;
+		}
+
+		#infowindow-content .title {
+			font-weight: bold;
+		}
+
+		#infowindow-content {
+			display: none;
+		}
+
+		#map #infowindow-content {
+			display: inline;
+		}
+
+		.pac-card {
+			margin: 10px 10px 0 0;
+			border-radius: 2px 0 0 2px;
+			box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			outline: none;
+			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+			background-color: #fff;
+			font-family: Roboto;
+		}
+
+		#pac-container {
+			padding-bottom: 12px;
+			margin-right: 12px;
+		}
+
+		.pac-controls {
+			display: inline-block;
+			padding: 5px 11px;
+		}
+
+		.pac-controls label {
+			font-family: Roboto;
+			font-size: 13px;
+			font-weight: 300;
+		}
+
+		#pac-input {
+			background-color: #fff;
+			font-family: Roboto;
+			font-size: 15px;
+			font-weight: 300;
+			margin-left: 12px;
+			margin-top: 10px;
+			padding: 0 11px 0 13px;
+			text-overflow: ellipsis;
+			width:300px;
+			height:30px;
+
+		}
+
+		#pac-input:focus {
+			border-color: #4d90fe;
+		}
+
+		#title {
+			color: #fff;
+			background-color: #4d90fe;
+			font-size: 25px;
+			font-weight: 500;
+			padding: 6px 12px;
+		}
+		#target {
+			width: 345px;
+		}
+
+		button{
+			border-radius: 10px;
+			background: rgba(255, 255, 255, 0.2);
+			border: 0px;
+			width:60px;
+			height:40px;
+			cursor: pointer;
+			transition:background 0.5 ease;
+		}
+		button:active{
+			background: rgba(200, 200, 200, 0.2);
+		}
+
+		.right{
+			float: right;
+		}
+		.left{
+			float: left;
+		}
+		.btn_group{
+			width:200px;
+			margin: auto;
+		}
+		.wrap{
+			width: 100%
+		}
+		.cards_group{
+			width: 100%;
+			height:230px;
+			overflow-x:auto;
+			white-space: nowrap;
+			margin-top: 50px;
+		}
+		.card{
+			cursor: pointer;
+			display: inline-block;
+			width:200px;
+			height:150px;
+			margin-left: 40px;
+			margin-top: 20px;
+			border: solid 0px;
+			padding: 10px;
+			overflow:hidden;
+			text-overflow: ellipsis;
+			box-shadow: -5px 5px 30px #000000;
+			transition: background-color 0.3s ease, border-radius 0.3s ease;
+		}
+		.card:hover{
+			background-color: #ff5050;			
+			box-shadow: 5px 5px 30px #000000;
+			transform: scale(1.1);
+			border-radius:10px;
+		}
+		.card:active{
+			background-color:#ffb499;
+		}
+		.choosen_card{
+			background-color:#ffb499;
+			border-radius:10px;
+		}
+		.center_card{
+
+		}
+		.info{
+			padding: 10px;
+			width: 100%;
+			height:20px;
+		}
+		h1{
+			width: 100%;
+			padding-top: 30px;
+			text-indent: 10px;
+			
+		}
+		.remove{
+			background-color: #bbff99;
+		}
+    </style>
+  </head>
+  <body>
+    <input id="pac-input" class="controls" type="text" placeholder="Search Box">
+    <div id="map"></div>
+    
+    <h1> Good Places to Go </h1>
+    <div class="wrap">
+	    <div class="cards_group result_places">
+	    	
+	    </div>
+
+	</div>
+    <span class="info"></span>
+    
+	<div class="btn_group">
+    	<button class="left" onclick="savePlace()">next</button>
+    	<button class="right" onclick="">submit</button>
+    </div>
+
+	<h1> Some Places Liked Before </h1>
+	<div class="wrap">
+		<div class="cards_group saved_places">
+			<!-- <div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div>
+			
+			<div class="card">'+p[i]+'</div>
+			<div class="card">'+p[i]+'</div> -->
+	    </div>	
+    </div>
+    <div class="btn_group">
+    	<button class="left" onclick="remove()">remove</button>
+    	<button class="right" onclick="clearAllSaved()">clear</button>
+    </div>
+	<script type="text/javascript" src="src/string.js"></script>
+    <script type="text/javascript" src="src/map.js"></script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBuzRjopdHSem5nmpae2VQsATTCycwAh8o&libraries=places&callback=initAutocomplete"
+         async defer></script>
+</body>
+
+</html>
